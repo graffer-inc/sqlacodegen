@@ -124,7 +124,9 @@ class SimpleItems(Base):
         validate_code(
             generator.generate(),
             """\
-from typing import List, Optional
+from __future__ import annotations
+
+from typing import Optional
 
 from sqlalchemy import ForeignKey, Integer
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -138,7 +140,7 @@ class SimpleContainers(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
 
-    simple_items: Mapped[List['SimpleItems']] = relationship('SimpleItems', back_populates='container')
+    simple_items: Mapped[list['SimpleItems']] = relationship('SimpleItems', back_populates='container')
 
 
 class SimpleItems(Base):
@@ -163,7 +165,9 @@ class SimpleItems(Base):
         validate_code(
             generator.generate(),
             """\
-from typing import List, Optional
+from __future__ import annotations
+
+from typing import Optional
 
 from sqlalchemy import ForeignKey, Integer
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -179,7 +183,7 @@ class SimpleItems(Base):
     parent_item_id: Mapped[Optional[int]] = mapped_column(ForeignKey('simple_items.id'))
 
     parent_item: Mapped['SimpleItems'] = relationship('SimpleItems', remote_side=[id], back_populates='parent_item_reverse')
-    parent_item_reverse: Mapped[List['SimpleItems']] = relationship('SimpleItems', remote_side=[parent_item_id], back_populates='parent_item')
+    parent_item_reverse: Mapped[list['SimpleItems']] = relationship('SimpleItems', remote_side=[parent_item_id], back_populates='parent_item')
 """,
         )
 
@@ -197,7 +201,9 @@ class SimpleItems(Base):
         validate_code(
             generator.generate(),
             """\
-from typing import List, Optional
+from __future__ import annotations
+
+from typing import Optional
 
 from sqlalchemy import ForeignKey, Integer
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -214,9 +220,9 @@ class SimpleItems(Base):
     top_item_id: Mapped[Optional[int]] = mapped_column(ForeignKey('simple_items.id'))
 
     parent_item: Mapped['SimpleItems'] = relationship('SimpleItems', remote_side=[id], foreign_keys=[parent_item_id], back_populates='parent_item_reverse')
-    parent_item_reverse: Mapped[List['SimpleItems']] = relationship('SimpleItems', remote_side=[parent_item_id], foreign_keys=[parent_item_id], back_populates='parent_item')
+    parent_item_reverse: Mapped[list['SimpleItems']] = relationship('SimpleItems', remote_side=[parent_item_id], foreign_keys=[parent_item_id], back_populates='parent_item')
     top_item: Mapped['SimpleItems'] = relationship('SimpleItems', remote_side=[id], foreign_keys=[top_item_id], back_populates='top_item_reverse')
-    top_item_reverse: Mapped[List['SimpleItems']] = relationship('SimpleItems', remote_side=[top_item_id], foreign_keys=[top_item_id], back_populates='top_item')
+    top_item_reverse: Mapped[list['SimpleItems']] = relationship('SimpleItems', remote_side=[top_item_id], foreign_keys=[top_item_id], back_populates='top_item')
             """,
         )
 
@@ -244,7 +250,9 @@ class SimpleItems(Base):
         validate_code(
             generator.generate(),
             """\
-from typing import List, Optional
+from __future__ import annotations
+
+from typing import Optional
 
 from sqlalchemy import ForeignKeyConstraint, Integer
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -259,7 +267,7 @@ class SimpleContainers(Base):
     id1: Mapped[int] = mapped_column(Integer, primary_key=True)
     id2: Mapped[int] = mapped_column(Integer, primary_key=True)
 
-    simple_items: Mapped[List['SimpleItems']] = relationship('SimpleItems', back_populates='simple_containers')
+    simple_items: Mapped[list['SimpleItems']] = relationship('SimpleItems', back_populates='simple_containers')
 
 
 class SimpleItems(Base):
@@ -295,7 +303,9 @@ class SimpleItems(Base):
         validate_code(
             generator.generate(),
             """\
-from typing import List, Optional
+from __future__ import annotations
+
+from typing import Optional
 
 from sqlalchemy import ForeignKey, Integer
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -309,8 +319,8 @@ class SimpleContainers(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
 
-    simple_items: Mapped[List['SimpleItems']] = relationship('SimpleItems', foreign_keys='[SimpleItems.parent_container_id]', back_populates='parent_container')
-    simple_items_: Mapped[List['SimpleItems']] = relationship('SimpleItems', foreign_keys='[SimpleItems.top_container_id]', back_populates='top_container')
+    simple_items: Mapped[list['SimpleItems']] = relationship('SimpleItems', foreign_keys='[SimpleItems.parent_container_id]', back_populates='parent_container')
+    simple_items_: Mapped[list['SimpleItems']] = relationship('SimpleItems', foreign_keys='[SimpleItems.top_container_id]', back_populates='top_container')
 
 
 class SimpleItems(Base):
@@ -383,7 +393,9 @@ class SimpleItems(Base):
         validate_code(
             generator.generate(),
             """\
-from typing import List, Optional
+from __future__ import annotations
+
+from typing import Optional
 
 from sqlalchemy import ForeignKey, Integer
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -397,7 +409,7 @@ class Fehwiuhfiw(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
 
-    oglkrogk: Mapped[List['Oglkrogk']] = relationship('Oglkrogk', back_populates='fehwiuhfiw')
+    oglkrogk: Mapped[list['Oglkrogk']] = relationship('Oglkrogk', back_populates='fehwiuhfiw')
 
 
 class Oglkrogk(Base):
@@ -428,7 +440,9 @@ class Oglkrogk(Base):
         validate_code(
             generator.generate(),
             """\
-from typing import List, Optional
+from __future__ import annotations
+
+from typing import Optional
 
 from sqlalchemy import ForeignKey, Integer, Text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -443,7 +457,7 @@ class SimpleContainers(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     relationship_: Mapped[Optional[str]] = mapped_column('relationship', Text)
 
-    simple_items: Mapped[List['SimpleItems']] = relationship('SimpleItems', back_populates='container')
+    simple_items: Mapped[list['SimpleItems']] = relationship('SimpleItems', back_populates='container')
 
 
 class SimpleItems(Base):
@@ -471,7 +485,9 @@ class SimpleItems(Base):
         validate_code(
             generator.generate(),
             """\
-from typing import List, Optional
+from __future__ import annotations
+
+from typing import Optional
 
 from sqlalchemy import ForeignKey, Integer
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -485,7 +501,7 @@ class Relationship(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
 
-    simple_items: Mapped[List['SimpleItems']] = relationship('SimpleItems', back_populates='relationship_')
+    simple_items: Mapped[list['SimpleItems']] = relationship('SimpleItems', back_populates='relationship_')
 
 
 class SimpleItems(Base):
@@ -560,7 +576,7 @@ class SimpleItems(Base):
         validate_code(
             generator.generate(),
             """\
-from typing import List
+from __future__ import annotations
 
 from sqlalchemy import Column, ForeignKey, Integer, Table
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -574,7 +590,7 @@ class LeftTable(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
 
-    right: Mapped[List['RightTable']] = relationship('RightTable', secondary='association_table', back_populates='left')
+    right: Mapped[list['RightTable']] = relationship('RightTable', secondary='association_table', back_populates='left')
 
 
 class RightTable(Base):
@@ -582,7 +598,7 @@ class RightTable(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
 
-    left: Mapped[List['LeftTable']] = relationship('LeftTable', secondary='association_table', back_populates='right')
+    left: Mapped[list['LeftTable']] = relationship('LeftTable', secondary='association_table', back_populates='right')
 
 
 t_association_table = Table(
@@ -615,7 +631,7 @@ t_association_table = Table(
         validate_code(
             generator.generate(),
             """\
-from typing import List
+from __future__ import annotations
 
 from sqlalchemy import Column, ForeignKey, Integer, Table
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -629,7 +645,7 @@ class SimpleContainers(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
 
-    item: Mapped[List['SimpleItems']] = relationship('SimpleItems', secondary='container_items')
+    item: Mapped[list['SimpleItems']] = relationship('SimpleItems', secondary='container_items')
 
 
 class SimpleItems(Base):
@@ -663,7 +679,7 @@ t_container_items = Table(
         validate_code(
             generator.generate(),
             """\
-from typing import List
+from __future__ import annotations
 
 from sqlalchemy import Column, ForeignKey, Integer, Table
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -677,8 +693,8 @@ class SimpleItems(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
 
-    parent: Mapped[List['SimpleItems']] = relationship('SimpleItems', secondary='otherschema.child_items', primaryjoin=lambda: SimpleItems.id == t_child_items.c.child_id, secondaryjoin=lambda: SimpleItems.id == t_child_items.c.parent_id, back_populates='child')
-    child: Mapped[List['SimpleItems']] = relationship('SimpleItems', secondary='otherschema.child_items', primaryjoin=lambda: SimpleItems.id == t_child_items.c.parent_id, secondaryjoin=lambda: SimpleItems.id == t_child_items.c.child_id, back_populates='parent')
+    parent: Mapped[list['SimpleItems']] = relationship('SimpleItems', secondary='otherschema.child_items', primaryjoin=lambda: SimpleItems.id == t_child_items.c.child_id, secondaryjoin=lambda: SimpleItems.id == t_child_items.c.parent_id, back_populates='child')
+    child: Mapped[list['SimpleItems']] = relationship('SimpleItems', secondary='otherschema.child_items', primaryjoin=lambda: SimpleItems.id == t_child_items.c.parent_id, secondaryjoin=lambda: SimpleItems.id == t_child_items.c.child_id, back_populates='parent')
 
 
 t_child_items = Table(
@@ -722,7 +738,7 @@ t_child_items = Table(
         validate_code(
             generator.generate(),
             """\
-from typing import List
+from __future__ import annotations
 
 from sqlalchemy import Column, ForeignKeyConstraint, Integer, Table
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -737,7 +753,7 @@ class SimpleContainers(Base):
     id1: Mapped[int] = mapped_column(Integer, primary_key=True)
     id2: Mapped[int] = mapped_column(Integer, primary_key=True)
 
-    simple_items: Mapped[List['SimpleItems']] = relationship('SimpleItems', secondary='container_items', back_populates='simple_containers')
+    simple_items: Mapped[list['SimpleItems']] = relationship('SimpleItems', secondary='container_items', back_populates='simple_containers')
 
 
 class SimpleItems(Base):
@@ -746,7 +762,7 @@ class SimpleItems(Base):
     id1: Mapped[int] = mapped_column(Integer, primary_key=True)
     id2: Mapped[int] = mapped_column(Integer, primary_key=True)
 
-    simple_containers: Mapped[List['SimpleContainers']] = relationship('SimpleContainers', secondary='container_items', back_populates='simple_items')
+    simple_containers: Mapped[list['SimpleContainers']] = relationship('SimpleContainers', secondary='container_items', back_populates='simple_items')
 
 
 t_container_items = Table(
@@ -1028,7 +1044,9 @@ class SimpleItems(Base):
         validate_code(
             generator.generate(),
             """\
-from typing import List, Optional
+from __future__ import annotations
+
+from typing import Optional
 
 from sqlalchemy import ForeignKey, Integer
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -1043,7 +1061,7 @@ class OtherItems(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
 
-    simple_items: Mapped[List['SimpleItems']] = relationship('SimpleItems', back_populates='other_item')
+    simple_items: Mapped[list['SimpleItems']] = relationship('SimpleItems', back_populates='other_item')
 
 
 class SimpleItems(Base):
@@ -1365,7 +1383,9 @@ class Simple(Base):
         validate_code(
             generator.generate(),
             """\
-from typing import List, Optional
+from __future__ import annotations
+
+from typing import Optional
 
 from sqlalchemy import ForeignKeyConstraint, Integer
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -1379,7 +1399,7 @@ class SimpleContainers(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
 
-    simple_items: Mapped[List['SimpleItems']] = relationship('SimpleItems', back_populates='container')
+    simple_items: Mapped[list['SimpleItems']] = relationship('SimpleItems', back_populates='container')
 
 
 class SimpleItems(Base):
