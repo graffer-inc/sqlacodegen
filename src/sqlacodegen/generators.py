@@ -529,6 +529,9 @@ class TablesGenerator(CodeGenerator):
             args.extend(varargs_repr)
 
         if isinstance(coltype, Enum) and coltype.name is not None:
+            args = [
+                a for a in args if a != repr(coltype.name)
+            ]
             kwargs["name"] = repr(coltype.name)
 
         if isinstance(coltype, JSONB):
