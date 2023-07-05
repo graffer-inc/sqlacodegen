@@ -13,7 +13,7 @@ from itertools import count
 from keyword import iskeyword
 from pprint import pformat
 from textwrap import indent
-from typing import Any, ClassVar
+from typing import Any, ClassVar, Union
 
 import inflect
 import sqlalchemy
@@ -509,7 +509,8 @@ class TablesGenerator(CodeGenerator):
 
             value = getattr(coltype, param.name, missing)
             default = defaults.get(param.name, missing)
-            if value is missing or value == default:
+            # FIXME: This is a hack to avoid rendering enum type.
+            if value is missing or value == default or isinstance(coltype, Enum) or Parameter.kind == Parameter.KEYWORD_ONLY:
                 use_kwargs = True
             elif use_kwargs:
                 kwargs[param.name] = repr(value)
@@ -529,9 +530,6 @@ class TablesGenerator(CodeGenerator):
             args.extend(varargs_repr)
 
         if isinstance(coltype, Enum) and coltype.name is not None:
-            args = [
-                a for a in args if a != repr(coltype.name)
-            ]
             kwargs["name"] = repr(coltype.name)
 
         if isinstance(coltype, JSONB):
@@ -1217,7 +1215,9 @@ class DeclarativeGenerator(TablesGenerator):
             return f"{column_attr.name} = {rendered_column}"
         else:
             try:
-                python_type = column.type.python_type
+                # FIXME: this is due to sqlalchemy associate JSON to dict, but actually there is a case that JSON is list
+                # https://github.com/sqlalchemy/sqlalchemy/blob/main/lib/sqlalchemy/sql/sqltypes.py#L2665
+                python_type = column.type.python_type if not isinstance(column.type, JSONB) else Union[dict, list]
                 python_type_name = python_type.__name__
                 if python_type.__module__ == "builtins":
                     column_python_type = python_type_name
