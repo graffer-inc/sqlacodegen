@@ -1217,8 +1217,8 @@ class DeclarativeGenerator(TablesGenerator):
             try:
                 # FIXME: this is due to sqlalchemy associate JSON to dict, but actually there is a case that JSON is list
                 # https://github.com/sqlalchemy/sqlalchemy/blob/main/lib/sqlalchemy/sql/sqltypes.py#L2665
-                python_type = column.type.python_type if not isinstance(column.type, JSONB) else Union[dict, list]
-                python_type_name = python_type.__name__
+                python_type = column.type.python_type
+                python_type_name = python_type.__name__ if not isinstance(column.type, JSONB) else "Union[dict, list]"
                 if python_type.__module__ == "builtins":
                     column_python_type = python_type_name
                 else:
