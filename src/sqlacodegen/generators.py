@@ -42,6 +42,7 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.engine import Connection, Engine
 from sqlalchemy.exc import CompileError
 from sqlalchemy.sql.elements import TextClause
+from pgvector.sqlalchemy import Vector
 
 from .models import (
     ColumnAttribute,
@@ -213,7 +214,9 @@ class TablesGenerator(CodeGenerator):
             self.collect_imports_for_constraint(index)
 
     def collect_imports_for_column(self, column: Column[Any]) -> None:
-        self.add_import(column.type)
+        if not is_vector(column):
+            # NOTE(adshidtadka): from sqlalchemy.sql.sqltypes import NullType が追加されるのを避ける
+            self.add_import(column.type)
 
         if isinstance(column.type, ARRAY):
             self.add_import(column.type.item_type.__class__)
@@ -437,7 +440,10 @@ class TablesGenerator(CodeGenerator):
         # Render the column type if there are no foreign keys on it or any of them
         # points back to itself
         if not dedicated_fks or any(fk.column is column for fk in dedicated_fks):
-            args.append(self.render_column_type(column.type))
+            if is_vector(column):
+                args.append("Vector")
+            else:
+                args.append(self.render_column_type(column.type))
 
         for fk in dedicated_fks:
             args.append(self.render_constraint(fk))
@@ -1230,8 +1236,12 @@ class DeclarativeGenerator(TablesGenerator):
                     column_python_type = f"{python_type_module}.{python_type_name}"
                     self.add_module_import(python_type_module)
             except NotImplementedError:
-                self.add_literal_import("typing", "Any")
-                column_python_type = "Any"
+                if is_vector(column):
+                    self.add_literal_import("pgvector.sqlalchemy", "Vector")
+                    column_python_type = "Vector"
+                else:
+                    self.add_literal_import("typing", "Any")
+                    column_python_type = "Any"
 
             if column.nullable:
                 self.add_literal_import("typing", "Optional")
@@ -1661,3 +1671,6 @@ class SQLModelGenerator(DeclarativeGenerator):
                 rendered_args.append("sa_relationship_kwargs={'uselist': False}")
 
         return rendered_args
+
+def is_vector(column: Column):
+    return column.type.__class__.__name__ == "NullType" and "vector" in column.key
