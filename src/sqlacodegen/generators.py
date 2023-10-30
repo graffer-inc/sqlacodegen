@@ -1672,5 +1672,5 @@ class SQLModelGenerator(DeclarativeGenerator):
 
         return rendered_args
 
-def is_vector(column: Column):
-    return column.type.__class__.__name__ == "NullType" and "vector" in column.key
+def is_vector(column: Column[Any]):
+    return column.type.__class__.__name__ == "NullType" and "USE_VECTOR_COLUMN_TYPE" in column.comment
