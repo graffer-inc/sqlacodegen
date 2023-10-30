@@ -516,7 +516,12 @@ class TablesGenerator(CodeGenerator):
             value = getattr(coltype, param.name, missing)
             default = defaults.get(param.name, missing)
             # FIXME: This is a hack to avoid rendering enum type.
-            if value is missing or value == default or isinstance(coltype, Enum) or Parameter.kind == Parameter.KEYWORD_ONLY:
+            if (
+                value is missing
+                or value == default
+                or isinstance(coltype, Enum)
+                or Parameter.kind == Parameter.KEYWORD_ONLY
+            ):
                 use_kwargs = True
             elif use_kwargs:
                 kwargs[param.name] = repr(value)
@@ -1672,5 +1677,10 @@ class SQLModelGenerator(DeclarativeGenerator):
 
         return rendered_args
 
+
 def is_vector(column: Column[Any]):
-    return column.type.__class__.__name__ == "NullType" and "USE_VECTOR_COLUMN_TYPE" in column.comment
+    return (
+        column.type.__class__.__name__ == "NullType"
+        and column.comment is not None
+        and "USE_VECTOR_COLUMN_TYPE" in column.comment
+    )
