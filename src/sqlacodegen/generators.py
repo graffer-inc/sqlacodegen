@@ -270,9 +270,9 @@ class TablesGenerator(CodeGenerator):
             dialect_pkgname = ".".join(pkgname.split(".")[0:3])
             dialect_pkg = import_module(dialect_pkgname)
 
-            if type_.__name__ in dialect_pkg.__all__:
+            if type_ is getattr(dialect_pkg, type_.__name__, None):
                 pkgname = dialect_pkgname
-        elif type_.__name__ in dir(sqlalchemy):
+        elif type_ is getattr(sqlalchemy, type_.__name__, None):
             pkgname = "sqlalchemy"
         else:
             pkgname = type_.__module__
