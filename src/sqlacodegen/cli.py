@@ -56,7 +56,7 @@ def main() -> None:
     tables = args.tables.split(",") if args.tables else None
     schemas = args.schemas.split(",") if args.schemas else [None]
     for schema in schemas:
-        metadata.reflect(engine, schema, not args.noviews, tables)
+        metadata.reflect(bind=engine, schema=schema, views=not args.noviews, only=tables)
 
     # Instantiate the generator
     generator_class = generators[args.generator].load()
